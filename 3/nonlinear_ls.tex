@@ -112,7 +112,7 @@ J^TJ \Delta\m + \lambda^{(k)} I \Delta\m = J^T (\y -\f), \label{eq.LM}
 \begin{enumerate}
  \item Если $\Phi(\lambda^{(k-1)} / \nu) \leq \Phi$ значит б\'{о}льший шаг улучшил приближение, и $\lambda^{(k)} = \lambda^{(k-1)} / \nu$
  \item Если $\Phi(\lambda^{(k-1)} / \nu) > \Phi$ и $\Phi(\lambda^{(k-1)}) \leq \Phi$, то старый шаг дал лучший результат, и $\lambda^{(k)} = \lambda^{(k-1)}$
- \item Если $\Phi(\lambda^{(k-1)} / \nu) > \Phi$ и $\Phi(\lambda^{(k-1)}) > \Phi(\lambda^{(k-1)})$, то результат ухудшился при обоих размерах шага и следует увеличивать $\lambda$ в $\hat\nu$ (это число не обязательно равно $\nu$) столько $w$ раз, сколько нужно чтоб $\Phi(\lambda^{(k-1)} \hat\nu^w) \leq \Phi$.
+ \item Если $\Phi(\lambda^{(k-1)} / \nu) > \Phi$ и $\Phi(\lambda^{(k-1)}) > \Phi$, то результат ухудшился при обоих размерах шага и следует увеличивать $\lambda$ в $\hat\nu$ (это число не обязательно равно $\nu$) столько $w$ раз, сколько нужно чтоб $\Phi(\lambda^{(k-1)} \hat\nu^w) \leq \Phi$.
   После этого $\lambda^{(k)} = \lambda^{(k-1)} \hat\nu^w$.
 \end{enumerate}
 
