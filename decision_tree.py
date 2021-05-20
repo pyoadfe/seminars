@@ -83,3 +83,26 @@ class BaseDecisionTree:
                     node = node.left
             y[i] = node.value
         return y
+
+    
+    
+
+class DecisionTreeClassifier(BaseDecisionTree):
+    def __init__(self, x, y, *args, random_state=None, **kwargs):
+        y = np.asarray(y, dtype=int)
+        self.random_state = np.random.RandomState(random_state)
+        self.classes = np.unique(y)
+        super().__init__(x, y, *args, **kwargs)
+        
+    def leaf_value(self, y):
+        class_counts = np.sum(y == self.classes.reshape(-1,1), axis=1)
+        m = np.max(class_counts)
+        most_common = self.classes[class_counts == m]
+        if most_common.size == 1:
+            return most_common[0]
+        return self.random_state.choice(most_common)
+    
+    def criteria(self, y):
+        """Gini"""
+        p = np.sum(y == self.classes.reshape(-1,1), axis=1) / y.size
+        return np.sum(p * (1 - p))
