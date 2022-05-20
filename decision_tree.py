@@ -3,7 +3,7 @@ import numpy as np
 from scipy import optimize
 
 
-Leaf = namedtuple('Leaf', ('value', 'x', 'y'))
+Leaf = namedtuple('Leaf', ('value'))
 Node = namedtuple('Node', ('feature', 'value', 'impurity', 'left', 'right',))
 
 class BaseDecisionTree:
@@ -19,7 +19,7 @@ class BaseDecisionTree:
     # Will fail in case of depth ~ 1000 because of limit of recursion calls
     def build_tree(self, x, y, depth=1):
         if depth > self.max_depth or self.criteria(y) < 1e-6:
-            return Leaf(self.leaf_value(y), x, y)
+            return Leaf(self.leaf_value(y))
         
         feature, value, impurity = self.find_best_split(x, y)
         
@@ -62,12 +62,9 @@ class BaseDecisionTree:
                 best_feature, best_value, best_impurity = feature, value, impurity
         return best_feature, best_value, best_impurity
     
-    # Can be optimized for given .criteria()
     def impurity(self, left, right):
-        h_l = self.criteria(left)
-        h_r = self.criteria(right)
-        return (left.size * h_l + right.size * h_r) / (left.size + right.size)
-    
+        raise NotImplementedError
+
     def criteria(self, y):
         raise NotImplementedError
         
@@ -84,8 +81,6 @@ class BaseDecisionTree:
             y[i] = node.value
         return y
 
-    
-    
 
 class DecisionTreeClassifier(BaseDecisionTree):
     def __init__(self, x, y, *args, random_state=None, **kwargs):
@@ -94,6 +89,11 @@ class DecisionTreeClassifier(BaseDecisionTree):
         self.classes = np.unique(y)
         super().__init__(x, y, *args, **kwargs)
         
+    def impurity(self, left, right):
+        h_l = self.criteria(left)
+        h_r = self.criteria(right)
+        return (left.size * h_l + right.size * h_r) / (left.size + right.size)
+
     def leaf_value(self, y):
         class_counts = np.sum(y == self.classes.reshape(-1,1), axis=1)
         m = np.max(class_counts)
@@ -101,7 +101,7 @@ class DecisionTreeClassifier(BaseDecisionTree):
         if most_common.size == 1:
             return most_common[0]
         return self.random_state.choice(most_common)
-    
+
     def criteria(self, y):
         """Gini"""
         p = np.sum(y == self.classes.reshape(-1,1), axis=1) / y.size
